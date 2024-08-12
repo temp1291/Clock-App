@@ -8,3 +8,8 @@ class Singleton(object):
             return it
         def init(self, *args, **kwds):
             pass
+
+        
+        @classmethod
+        def reset_instance(cls):
+             cls.__it__ = None

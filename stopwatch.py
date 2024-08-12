@@ -1,37 +1,6 @@
 from tkinter import *
 from tkinter import ttk
-import json
 import time
-from singleton import Singleton
-
-
-class Window(Tk, Singleton):
-    def __init__(self):
-        pass
-
-
-    def init(self):
-        super().__init__()
-        self.load_data_from_json()
-        self.title('Clock')
-        self.geometry(f'{self.window_width}x{self.window_height}+{self.winfo_screenwidth() // 2 - self.window_width // 2}+{self.winfo_screenheight() // 2 - self.window_height // 2}')
-
-        self.grid_columnconfigure(0, weight=1)
-        self.grid_rowconfigure(0, weight=1)
-
-        self.notebook = ttk.Notebook(self)
-        self.notebook.grid(row=0, column=0, sticky="nsew")
-
-        stopwatch_frame = Stopwatch(self)
-        stopwatch_frame.grid(row=0, column=0, sticky="nsew")
-        self.notebook.add(stopwatch_frame, text='Stopwatch')
-
-
-    def load_data_from_json(self):
-        with open('config.json', 'r') as file:
-            data = json.load(file)
-
-        self.window_width, self.window_height = data['window_size']
 
 
 class Stopwatch(ttk.Frame):
@@ -84,10 +53,11 @@ class Stopwatch(ttk.Frame):
 
     def start(self):
         self.button_mark.config(state='normal')
+        self.button_toggle.config(text='Pause', command=self.pause)
+
         if not self.start_time:
             self.start_time = time.time()
 
-        self.button_toggle.config(text='Pause', command=self.pause)
         self.running = True
         self.update_time()
 
@@ -114,6 +84,7 @@ class Stopwatch(ttk.Frame):
         self.button_toggle.config(text='Start', command=self.start)
         self.button_reset.config(state='disabled')
         self.button_mark.config(state='disabled')
+        self.clear_table()
 
 
     def mark(self):
@@ -131,19 +102,15 @@ class Stopwatch(ttk.Frame):
     def update_time(self):
         if self.running:
             elapsed_seconds = time.time() - self.start_time
-            hours, minutes, seconds, miliseconds = self.convert_seconds_to_time(elapsed_seconds)
-
+            hours, minutes, seconds, miliseconds = self.parent.convert_seconds_to_time(elapsed_seconds)
             self.label_time.config(text=f'{hours:01}:{minutes:02}.{seconds:02}.{miliseconds:03}')
-            self.parent.after(10, self.update_time)
+            self.parent.after(17, self.update_time)
 
 
-    def convert_seconds_to_time(self, seconds_to_convert):
-        hours = int(seconds_to_convert / 3600)
-        seconds_to_convert -= hours * 3600
-        minutes = int(seconds_to_convert / 60)
-        seconds_to_convert -= minutes * 60
-        seconds = int(seconds_to_convert)
-        seconds_to_convert -= seconds
-        miliseconds = int(seconds_to_convert * 1000)
+    def clear_table(self):
+        for item in self.table.get_children():
+            self.table.delete(item)
 
-        return hours, minutes, seconds, miliseconds
+
+
+    
