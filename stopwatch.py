@@ -1,6 +1,6 @@
 from tkinter import *
 from tkinter import ttk
-import time
+from time import time
 
 
 class Stopwatch(ttk.Frame):
@@ -56,14 +56,14 @@ class Stopwatch(ttk.Frame):
         self.button_toggle.config(text='Pause', command=self.pause)
 
         if not self.start_time:
-            self.start_time = time.time()
+            self.start_time = time()
 
         self.running = True
         self.update_time()
 
 
     def pause(self):
-        self.elapsed_time = time.time() - self.start_time
+        self.elapsed_time = time() - self.start_time
         self.button_reset.config(state='normal')
         self.button_mark.config(state='disabled')
         self.button_toggle.config(text='Resume', command=self.resume)
@@ -71,7 +71,7 @@ class Stopwatch(ttk.Frame):
 
     
     def resume(self):
-        current_time = time.time()
+        current_time = time()
         self.start_time = current_time - self.elapsed_time
         self.button_reset.config(state='disabled')
         self.button_mark.config(state='normal')
@@ -85,10 +85,11 @@ class Stopwatch(ttk.Frame):
         self.button_reset.config(state='disabled')
         self.button_mark.config(state='disabled')
         self.clear_table()
+        self.mark_time_number = 1
 
 
     def mark(self):
-        current_time = time.time()
+        current_time = time()
         if self.previous_mark_time:
             delta_time = round(current_time - self.previous_mark_time, 4)
         else:
@@ -101,7 +102,7 @@ class Stopwatch(ttk.Frame):
 
     def update_time(self):
         if self.running:
-            elapsed_seconds = time.time() - self.start_time
+            elapsed_seconds = time() - self.start_time
             hours, minutes, seconds, miliseconds = self.parent.convert_seconds_to_time(elapsed_seconds)
             self.label_time.config(text=f'{hours:01}:{minutes:02}.{seconds:02}.{miliseconds:03}')
             self.parent.after(17, self.update_time)

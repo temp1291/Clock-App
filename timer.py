@@ -1,8 +1,8 @@
 from tkinter import *
 from tkinter import ttk
-import time
-import pygame
-import threading
+from time import time, sleep
+from pygame import init, mixer
+from threading import Thread
 from time_picker_window import TimePickerWindow
 
 
@@ -14,10 +14,10 @@ class Timer(ttk.Frame):
         for c in range(2): self.columnconfigure(index=c, weight=1)
         for r in range(7): self.rowconfigure(index=r, weight=1)
 
-        pygame.init()
-        pygame.mixer.init()
+        init()
+        mixer.init()
 
-        self.alarm = pygame.mixer.Sound('alarm_sounds\\alarm_1.mp3')
+        self.alarm = mixer.Sound('alarm_sounds\\alarm_1.mp3')
         self.alarm.set_volume(0.3)
 
         self.running = False
@@ -41,7 +41,7 @@ class Timer(ttk.Frame):
 
 
     def start(self):
-        self.target_time = time.time() + self.selected_time
+        self.target_time = time() + self.selected_time
 
         self.button_reset.config(state='normal')
         self.button_toggle.config(text='Pause', command=self.pause)
@@ -58,7 +58,7 @@ class Timer(ttk.Frame):
 
 
     def pause(self):
-        self.pause_start_time = time.time()
+        self.pause_start_time = time()
         self.button_toggle.config(text='Resume', command=self.resume)
         self.running = False
 
@@ -66,7 +66,7 @@ class Timer(ttk.Frame):
     def resume(self):
         self.button_toggle.config(text='Pause', command=self.pause)
 
-        pause_elapsed_time = time.time() - self.pause_start_time
+        pause_elapsed_time = time() - self.pause_start_time
         self.target_time += pause_elapsed_time
         self.running = True
         self.update_time()
@@ -74,7 +74,7 @@ class Timer(ttk.Frame):
 
     def update_time(self):
         if self.running:
-            remaining_time = self.target_time - time.time()
+            remaining_time = self.target_time - time()
 
             if remaining_time <= 0:
                 self.timer_done()
@@ -105,14 +105,14 @@ class Timer(ttk.Frame):
 
         self.alarm_played = True
 
-        alarm_thread = threading.Thread(target=self.play_alarm)
+        alarm_thread = Thread(target=self.play_alarm)
         alarm_thread.start()
 
     
     def play_alarm(self):
         while self.alarm_played:
             self.alarm.play()
-            time.sleep(self.alarm.get_length())
+            sleep(self.alarm.get_length())
 
 
     def turn_off_alarm(self):
