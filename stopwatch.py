@@ -85,6 +85,7 @@ class Stopwatch(ttk.Frame):
         self.button_reset.config(state='disabled')
         self.button_mark.config(state='disabled')
         self.clear_table()
+        self.mark_time_number = 1
 
 
     def mark(self):
