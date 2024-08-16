@@ -4,6 +4,7 @@ import json
 from singleton import Singleton
 from stopwatch import Stopwatch
 from timer import Timer
+from alarm import Alarm
 
 
 class Window(Tk, Singleton):
@@ -21,14 +22,18 @@ class Window(Tk, Singleton):
         self.grid_rowconfigure(0, weight=1)
 
         self.notebook = ttk.Notebook(self)
-        self.notebook.grid(row=0, column=0, sticky="nsew")
+        self.notebook.grid(column=0, row=0, sticky=NSEW)
+
+        alarm_frame = Alarm(self)
+        alarm_frame.grid(column=0, row=0, sticky=NSEW)
+        self.notebook.add(alarm_frame, text='Alarm')
 
         stopwatch_frame = Stopwatch(self)
-        stopwatch_frame.grid(row=0, column=0, sticky="nsew")
+        stopwatch_frame.grid(column=0, row=0, sticky=NSEW)
         self.notebook.add(stopwatch_frame, text='Stopwatch')
 
         timer_frame = Timer(self)
-        timer_frame.grid(row=0, column=0, sticky="nsew")
+        timer_frame.grid(column=0, row=0, sticky=NSEW)
         self.notebook.add(timer_frame, text='Timer')
 
 

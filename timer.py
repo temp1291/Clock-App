@@ -17,8 +17,8 @@ class Timer(ttk.Frame):
         init()
         mixer.init()
 
-        self.alarm = mixer.Sound('alarm_sounds\\alarm_1.mp3')
-        self.alarm.set_volume(0.3)
+        self.alarm_sound = mixer.Sound('alarm_sounds\\alarm_1.mp3')
+        self.alarm_sound.set_volume(0.3)
 
         self.running = False
 
@@ -26,7 +26,7 @@ class Timer(ttk.Frame):
 
 
     def put_widgets(self):
-        label_title = ttk.Label(self, text='Timer') # font=('Arial', 30)
+        label_title = ttk.Label(self, text='Timer', font=('Arial', 18))
         label_title.grid(column=0, row=0, sticky=W)
 
         self.label_time = ttk.Label(self, text='00:00.00', font=('Arial', 30), justify=CENTER, anchor=CENTER)
@@ -91,7 +91,6 @@ class Timer(ttk.Frame):
         self.parent.wait_window(window)
 
         self.selected_time = window.get_selected_time()
-        # window = None
         hours, minutes, seconds, miliseconds = self.parent.convert_seconds_to_time(self.selected_time)
         self.label_time.config(text=f'{hours:01}:{minutes:02}.{seconds:02}')
         self.button_toggle.config(state=NORMAL)
@@ -111,8 +110,8 @@ class Timer(ttk.Frame):
     
     def play_alarm(self):
         while self.alarm_played:
-            self.alarm.play()
-            sleep(self.alarm.get_length())
+            self.alarm_sound.play()
+            sleep(self.alarm_sound.get_length())
 
 
     def turn_off_alarm(self):

@@ -13,6 +13,7 @@ class TimePickerWindow(Toplevel, Singleton):
         self.title('Time Picker')
         self.geometry(f'{320}x{240}+{self.winfo_screenwidth() // 2 - 320 // 2}+{self.winfo_screenheight() // 2 - 240 // 2}')
         self.resizable(False, False)
+        self.protocol('WM_DELETE_WINDOW', self.quit)
 
         for c in range(3): self.columnconfigure(index=c, weight=1)
         for r in range(4): self.rowconfigure(index=r, weight=1)
@@ -24,9 +25,6 @@ class TimePickerWindow(Toplevel, Singleton):
 
 
     def put_widgets(self):
-        frame_main = ttk.Frame(self)
-        frame_main.grid(column=0, row=0, sticky=NSEW)
-
         label_hour = ttk.Label(self, text='Hour:')
         label_hour.grid(column=0, row=0, sticky=S)
 
